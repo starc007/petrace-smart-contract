@@ -1,4 +1,4 @@
-# Smart Contract
+# PetRace Smart Contract
 
 Smart contract which generates yeild on ETH deposited on Contract, Its a petracing game smart contract
 
