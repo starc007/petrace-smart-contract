@@ -6,7 +6,8 @@
 // global scope, and execute the script.
 const hre = require("hardhat");
 
-const platformFeeAddress = "0xD740387440012782E6D760b86B21b17b8d1166B5";
+// const platformFeeAddress = "0xD740387440012782E6D760b86B21b17b8d1166B5";
+const platformFeeAddress = "0xF2b4aEC71F3a772fDE47Bf80B457d72A03d78Aae";
 
 async function main() {
   const petRace = await hre.ethers.deployContract(

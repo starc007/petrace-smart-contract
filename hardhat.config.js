@@ -2,7 +2,8 @@ require("@nomicfoundation/hardhat-toolbox");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 
-const privateKey = "YOUR_PRIVATE_KEY";
+// const privateKey = "YOUR_PRIVATE_KEY";
+const privateKey = "";
 
 module.exports = {
   solidity: {
@@ -23,6 +24,10 @@ module.exports = {
       accounts: [privateKey],
       gasPrice: 1000000000,
       saveDeployments: true,
+    },
+    zkSync: {
+      url: "https://mainnet.era.zksync.io",
+      accounts: [privateKey],
     },
   },
 };

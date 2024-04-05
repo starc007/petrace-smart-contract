@@ -3,13 +3,12 @@ pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 
-import "../interfaces/IBlast.sol";
+// import "../interfaces/IBlast.sol";
 
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
 contract PetRace is Ownable2Step, ReentrancyGuard {
-
     uint256 public constant MAX_PETS = 10000;
     uint256 public constant BASE_PRICE = 0.001 ether;
     uint256 public constant MAX_LEVEL = 100;
@@ -22,7 +21,6 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
     uint256 public constant THIRD_WINNER_PRIZE = 0.2 * 1 ether; // 20% of the entry fees
 
     address blastAddress = 0x4300000000000000000000000000000000000002;
-
 
     struct PetMaxAttributes {
         uint256 speed;
@@ -45,7 +43,6 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
         uint256 luck;
     }
 
-   
     /**
      * @dev Pet struct
      */
@@ -112,9 +109,8 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
             luck: 100
         });
 
-
-        IBlast(blastAddress).configureClaimableGas();
-        IBlast(blastAddress).configureClaimableYield();
+        // IBlast(blastAddress).configureClaimableGas();
+        // IBlast(blastAddress).configureClaimableYield();
     }
 
     modifier onlyPlatformFeeAddress() {
@@ -126,7 +122,10 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
     }
 
     modifier isPetOwner(uint256 _petId) {
-        require(pets[_petId].owner == msg.sender, "You are not the owner of the pet");
+        require(
+            pets[_petId].owner == msg.sender,
+            "You are not the owner of the pet"
+        );
         _;
     }
 
@@ -160,11 +159,11 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
     /**
      * @dev Set Pet Attributes Fees
      * @param _speed The speed fee
-        * @param _stamina The stamina fee
-        * @param _strength The strength fee
-        * @param _agility The agility fee
-        * @param _intelligence The intelligence fee
-        * @param _luck The luck fee
+     * @param _stamina The stamina fee
+     * @param _strength The strength fee
+     * @param _agility The agility fee
+     * @param _intelligence The intelligence fee
+     * @param _luck The luck fee
      */
     function setPetAttributesFees(
         uint256 _speed,
@@ -187,11 +186,11 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
     /**
      * @dev Set Pet Max Attributes
      * @param _speed The max speed
-        * @param _stamina The max stamina
-        * @param _strength The max strength
-        * @param _agility The max agility
-        * @param _intelligence The max intelligence
-        * @param _luck The max luck
+     * @param _stamina The max stamina
+     * @param _strength The max strength
+     * @param _agility The max agility
+     * @param _intelligence The max intelligence
+     * @param _luck The max luck
      */
     function setPetMaxAttributes(
         uint256 _speed,
@@ -424,7 +423,7 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
     function upgradePetSpees(
         uint256 _petId,
         uint256 _speed
-    ) external isPetOwner(_petId) payable nonReentrant{
+    ) external payable isPetOwner(_petId) nonReentrant {
         require(_speed <= petMaxAttributes.speed, "Invalid speed");
 
         uint256 _speedFees = petAttributesFees.speed * _speed;
@@ -440,7 +439,7 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
     function upgradePetStamina(
         uint256 _petId,
         uint256 _stamina
-    ) external isPetOwner(_petId) payable nonReentrant{
+    ) external payable isPetOwner(_petId) nonReentrant {
         require(_stamina <= petMaxAttributes.stamina, "Invalid stamina");
 
         uint256 _staminaFees = petAttributesFees.stamina * _stamina;
@@ -457,7 +456,7 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
     function upgradePetStrength(
         uint256 _petId,
         uint256 _strength
-    ) external isPetOwner(_petId) payable nonReentrant{
+    ) external payable isPetOwner(_petId) nonReentrant {
         require(_strength <= petMaxAttributes.strength, "Invalid strength");
 
         uint256 _strengthFees = petAttributesFees.strength * _strength;
@@ -473,7 +472,7 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
     function upgradePetAgility(
         uint256 _petId,
         uint256 _agility
-    ) external isPetOwner(_petId) payable nonReentrant{
+    ) external payable isPetOwner(_petId) nonReentrant {
         require(_agility <= petMaxAttributes.agility, "Invalid agility");
 
         uint256 _agilityFees = petAttributesFees.agility * _agility;
@@ -489,10 +488,14 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
     function upgradePetIntelligence(
         uint256 _petId,
         uint256 _intelligence
-    ) external isPetOwner(_petId) payable nonReentrant{
-        require(_intelligence <= petMaxAttributes.intelligence, "Invalid intelligence");
+    ) external payable isPetOwner(_petId) nonReentrant {
+        require(
+            _intelligence <= petMaxAttributes.intelligence,
+            "Invalid intelligence"
+        );
 
-        uint256 _intelligenceFees = petAttributesFees.intelligence * _intelligence;
+        uint256 _intelligenceFees = petAttributesFees.intelligence *
+            _intelligence;
         require(msg.value >= _intelligenceFees, "Insufficient funds");
         pets[_petId].intelligence = _intelligence;
     }
@@ -505,7 +508,7 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
     function upgradePetLuck(
         uint256 _petId,
         uint256 _luck
-    ) external isPetOwner(_petId) payable nonReentrant{
+    ) external payable isPetOwner(_petId) nonReentrant {
         require(_luck <= petMaxAttributes.luck, "Invalid luck");
 
         uint256 _luckFees = petAttributesFees.luck * _luck;
@@ -513,12 +516,11 @@ contract PetRace is Ownable2Step, ReentrancyGuard {
         pets[_petId].luck = _luck;
     }
 
-
-    /**
-     * @dev Claim the yield & gas
-     */
-    function claimYieldAndGas() external onlyPlatformFeeAddress {
-        IBlast(blastAddress).claimAllYield(address(this), msg.sender);
-        IBlast(blastAddress).claimAllGas(address(this), msg.sender);
-    }
+    // /**
+    //  * @dev Claim the yield & gas
+    //  */
+    // function claimYieldAndGas() external onlyPlatformFeeAddress {
+    //     IBlast(blastAddress).claimAllYield(address(this), msg.sender);
+    //     IBlast(blastAddress).claimAllGas(address(this), msg.sender);
+    // }
 }
